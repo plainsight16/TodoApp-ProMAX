@@ -46,14 +46,16 @@ function updateSavedColumns() {
 
 // Create DOM Elements for each list item
 function createItemEl(columnEl, column, item, index) {
-  console.log('columnEl:', columnEl);
-  console.log('column:', column);
-  console.log('item:', item);
-  console.log('index:', index);
+  // console.log('columnEl:', columnEl);
+  // console.log('column:', column);
+  // console.log('item:', item);
+  // console.log('index:', index);
   // List Item
   const listEl = document.createElement('li');
   listEl.classList.add('drag-item');
   listEl.textContent = item;
+  listEl.draggable =  true;
+  listEl.setAttribute("ondragstart", "drag(event)");
   columnEl.appendChild(listEl);
 
 
@@ -89,6 +91,26 @@ function updateDOM() {
   // Run getSavedColumns only once, Update Local Storage
 
 
+}
+
+let draggedItem;
+function drag(e){
+  draggedItem = e.target;
+}
+
+function allowDrop(e){
+  e.preventDefault();
+}
+
+function dragEnter(columnIndex){
+  itemLists[columnIndex].classList.add("over");
+}
+
+function drop(e, columnIndex){
+  e.preventDefault();
+  let columnEl = itemLists[columnIndex];
+  columnEl.appendChild(draggedItem);
+  itemLists.forEach(column => column.classList.remove("over"));
 }
 
 getSavedColumns();
