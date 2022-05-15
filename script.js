@@ -53,23 +53,44 @@ function createItemEl(columnEl, column, item, index) {
   // List Item
   const listEl = document.createElement('li');
   listEl.classList.add('drag-item');
+  listEl.textContent = item;
+  columnEl.appendChild(listEl);
+
 
 }
 
 // Update Columns in DOM - Reset HTML, Filter Array, Update localStorage
 function updateDOM() {
   // Check localStorage once
-
+  
   // Backlog Column
-
+  backlogList.textContent = "";
+  backlogListArray.forEach((backlogItem, index) =>{
+    createItemEl(backlogList, 0, backlogItem, index);
+  })
   // Progress Column
+  progressList.textContent = "";
+  progressListArray.forEach((progressItem, index) =>{
+    createItemEl(progressList, 0, progressItem, index);
+  });
 
   // Complete Column
+  completeList.textContent = "";
+  completeListArray.forEach((completeItem, index) =>{
+    createItemEl(completeList, 0, completeItem, index);
+  });
 
   // On Hold Column
+  onHoldList.textContent = "";
+  onHoldListArray.forEach((onHoldItem, index) =>{
+    createItemEl(onHoldList, 0, onHoldItem, index);
+  })
 
   // Run getSavedColumns only once, Update Local Storage
 
 
 }
 
+getSavedColumns();
+updateSavedColumns();
+updateDOM();
