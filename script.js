@@ -19,7 +19,7 @@ let completeListArray = [];
 let onHoldListArray = [];
 
 // Drag Functionality
-
+let draggedItem;
 
 // Get Arrays from localStorage if available, set default values if not
 function getSavedColumns() {
@@ -62,7 +62,7 @@ function createItemEl(columnEl, column, item, index) {
 }
 
 // Update Columns in DOM - Reset HTML, Filter Array, Update localStorage
-function updateDOM() {
+function updateDOM  ()  {
   // Check localStorage once
   
   // Backlog Column
@@ -73,27 +73,40 @@ function updateDOM() {
   // Progress Column
   progressList.textContent = "";
   progressListArray.forEach((progressItem, index) =>{
-    createItemEl(progressList, 0, progressItem, index);
+    createItemEl(progressList, 1, progressItem, index);
   });
 
   // Complete Column
   completeList.textContent = "";
   completeListArray.forEach((completeItem, index) =>{
-    createItemEl(completeList, 0, completeItem, index);
+    createItemEl(completeList, 2, completeItem, index);
   });
 
   // On Hold Column
   onHoldList.textContent = "";
   onHoldListArray.forEach((onHoldItem, index) =>{
-    createItemEl(onHoldList, 0, onHoldItem, index);
+    createItemEl(onHoldList, 3, onHoldItem, index);
   })
 
   // Run getSavedColumns only once, Update Local Storage
 
+  updateSavedColumns();
+}
+  
+  //console.log("rebuildArray", backlogListArray);
 
+function rebuildArrays(){
+  backlogListArray = Array.from(backlogList.children).map(item => item.textContent);
+
+  progressListArray = Array.from(progressList.children).map(item => item.textContent);
+
+  completeListArray = Array.from(completeList.children).map(item => item.textContent);
+
+  onHoldListArray = Array.from(onHoldList.children).map(item => item.textContent);
+
+  updateDOM();
 }
 
-let draggedItem;
 function drag(e){
   draggedItem = e.target;
 }
@@ -111,8 +124,10 @@ function drop(e, columnIndex){
   let columnEl = itemLists[columnIndex];
   columnEl.appendChild(draggedItem);
   itemLists.forEach(column => column.classList.remove("over"));
+  rebuildArrays();
 }
 
 getSavedColumns();
-updateSavedColumns();
 updateDOM();
+updateSavedColumns();
+
