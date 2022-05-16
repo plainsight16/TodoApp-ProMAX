@@ -17,6 +17,7 @@ let backlogListArray = [];
 let progressListArray = [];
 let completeListArray = [];
 let onHoldListArray = [];
+let listArrays = [];
 
 // Drag Functionality
 let draggedItem;
@@ -38,10 +39,12 @@ function getSavedColumns() {
 
 // Set localStorage Arrays
 function updateSavedColumns() {
-  localStorage.setItem('backlogItems', JSON.stringify(backlogListArray));
-  localStorage.setItem('progressItems', JSON.stringify(progressListArray));
-  localStorage.setItem('completeItems', JSON.stringify(completeListArray));
-  localStorage.setItem('onHoldItems', JSON.stringify(onHoldListArray));
+  listArrays = [backlogListArray, progressListArray, completeListArray, onHoldListArray];
+  const arrayNames = ["backlog", "progress", "complete", "onHold"];
+
+  arrayNames.forEach((name, index) =>{
+    localStorage.setItem(`${name}Items`, JSON.stringify(listArrays[index]))
+  });
 }
 
 // Create DOM Elements for each list item
@@ -125,6 +128,36 @@ function drop(e, columnIndex){
   columnEl.appendChild(draggedItem);
   itemLists.forEach(column => column.classList.remove("over"));
   rebuildArrays();
+}
+
+function addItem(columnIndex){
+  let selectedArray = listArrays[columnIndex];
+  let newItem = addItems[columnIndex].textContent;
+  if(newItem !== "" || newItem !== " "){
+    selectedArray.push(newItem);
+    addItems[columnIndex].textContent = "";
+    updateSavedColumns();
+    updateDOM();
+  }
+}
+
+function showInputBox(columnIndex){
+  let addBtn = addBtns[columnIndex];
+  let saveBtn = saveItemBtns[columnIndex];
+  let container = addItemContainers[columnIndex];
+  addBtn.style.visibility = "hidden";
+  saveBtn.style.display = "flex";
+  container.style.display = "flex";
+}
+
+function hideInputBox(columnIndex){
+  let addBtn = addBtns[columnIndex];
+  let saveBtn = saveItemBtns[columnIndex];
+  let container = addItemContainers[columnIndex];
+  addBtn.style.visibility = "visible";
+  saveBtn.style.display = "none";
+  container.style.display = "none";
+  addItem(columnIndex);
 }
 
 getSavedColumns();
